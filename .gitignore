@@ -1,0 +1,10 @@
+/archetypes/
+/data/
+/node_modules/
+/static/
+/layouts/
+resources/
+/themes/
+/public/
+*.firebase*
+firebase-debug.log
