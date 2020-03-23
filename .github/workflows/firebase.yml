@@ -37,10 +37,7 @@ jobs:
         
       - name: install theme
         run: |
-          git clone https://github.com/Sisylocke/hugo-theme-even.git $HOME/blog/themes/even
-          cd $HOME/blog/themes/even
-          yarn install
-          yarn build
+          git clone https://github.com/yuuzao/plain.git $HOME/blog/themes/plain
                     
       - name: build
         run: |
