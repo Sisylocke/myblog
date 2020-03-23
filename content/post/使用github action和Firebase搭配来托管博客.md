@@ -1,8 +1,9 @@
 ---
 title: "使用github action和Firebase搭配来托管博客"
-tags: [折腾"]
+tags: ["折腾"]
 date: 2020-02-22T02:16:00+08:00
 draft: false
+categories: "萨达姆做好了战斗准备"
 ---
 
 ## 絮絮叨叨
