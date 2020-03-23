@@ -1,7 +1,7 @@
 ---
 title: "Median Of Two Sorted Arrays"
 date: 2020-03-23T22:41:55+08:00
-draft: true
+draft: false
 categories: "刷了个题"
 ---
 
