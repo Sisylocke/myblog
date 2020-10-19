@@ -58,7 +58,6 @@ jobs:
             echo "---"
             echo $(pwd)
             ls -a
-            echo "==="
             cd blog
             find . -name 'public' -delete
             mkdir public
