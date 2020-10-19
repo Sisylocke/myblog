@@ -58,13 +58,14 @@ jobs:
             echo "---"
             echo $(pwd)
             echo '----'
+            cd public
             git checkout public
             mkdir -p public/public
             rm -rf public/public/*
             /bin/cp -rvf $HOME/blog/public/* public/public
             ls -a
             echo '--'
-            cd public
+            
             ls -a
             git status
 
