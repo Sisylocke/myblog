@@ -4,10 +4,7 @@
 /layouts/
 resources/
 /themes/
-/public/
 /content/_v*
 content/post/_vnote.*
 content/post/*.vswp
-*.firebase*
-firebase-debug.log
 _config_even.toml
