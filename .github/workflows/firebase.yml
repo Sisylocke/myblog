@@ -44,10 +44,23 @@ jobs:
           cd $HOME/blog
           HUGO_ENV=production hugo --gc --minify
       
-      - name: push to firebase
+      - name: ssh setup
+        env:
+          Host: ${{ sercrets.HOST }}
+          Secret_key: ${{ secrets.SECRET_KEY }}
         run: |
-          sudo curl -o "/usr/local/bin/firebase" -L https://firebase.tools/bin/linux/latest
-          sudo chmod +rx "/usr/local/bin/firebase"
-          cd $HOME/blog
-          firebase use khaki-161613 --token ${{ secrets.FIREBASE_TOKEN }}
-          firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
+          mkdir -p ~/.ssh
+          echo "${Host}" >> ~/.ssh/known_hosts
+          echo "${Secret_key} >> ~/.ssh/my_rsync_key
+          echo "IdentityFile ~/.ssh/my_rsync_key" >> ~/.ssh/config
+          chmod -R 700 ~/.ssh
+          
+      - name: push to server
+        run: |
+            cd $HOME/blog
+            rsync -avz -e ssh --delete public/ ${USER}@${HOST}:/var/blog/
+#           sudo curl -o "/usr/local/bin/firebase" -L https://firebase.tools/bin/linux/latest
+#           sudo chmod +rx "/usr/local/bin/firebase"
+#           cd $HOME/blog
+#           firebase use khaki-161613 --token ${{ secrets.FIREBASE_TOKEN }}
+#           firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
