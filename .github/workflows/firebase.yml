@@ -51,14 +51,14 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
         with:
-          path: blog
+          path: public
         
       - name: commit changes
         run: |
             echo "---"
             echo $(pwd)
             ls -a
-            cd blog
+            cd public
             git show-ref
             echo '----'
             find . -name 'public' -delete
