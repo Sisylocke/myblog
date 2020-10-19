@@ -67,7 +67,7 @@ jobs:
             echo '---'
             git config --local user.email "w@tcp.cat"
             git config --local user.name "yuuzao"
-            git add public
+            git add public -f
             git commit -m "new post" -a
             git push origin blog --force
             
