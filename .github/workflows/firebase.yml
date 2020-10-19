@@ -55,7 +55,7 @@ jobs:
       - name: push to server
         run: |
             cd $HOME/blog
-            rsync -avz -e ssh --delete public/ ${USER}@${HOST}:/var/blog/
+            rsync --delete -rvzh ./public/ ${USER}@${HOST}:/var/blog/
 #           sudo curl -o "/usr/local/bin/firebase" -L https://firebase.tools/bin/linux/latest
 #           sudo chmod +rx "/usr/local/bin/firebase"
 #           cd $HOME/blog
