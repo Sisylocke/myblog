@@ -60,14 +60,14 @@ jobs:
             ls -a
             echo "==="
             cd blog
-            rm -r * 
-            /bin/cp -rvf $HOME/blog/public/* .
+            rm -r public
+            /bin/cp -rvf $HOME/blog/public/* public/
             echo '----'
             git show-ref
             echo '---'
             git config --local user.email "w@tcp.cat"
             git config --local user.name "yuuzao"
-            git add .
+            git add public
             git commit -m "new post" -a
             git push origin blog --force
             
