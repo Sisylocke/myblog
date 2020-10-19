@@ -60,6 +60,7 @@ jobs:
             git config --global user.name "yuuzao"
             git init
             git remote add origin https://github.com/yuuzao/blog.git
+            git checkout main
             git add .
             git commit -m "new post" -a
 
