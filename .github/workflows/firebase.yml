@@ -51,7 +51,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
         with:
-          path: public
+          path: blog
         
       - name: commit changes
         run: |
@@ -59,16 +59,14 @@ jobs:
             echo $(pwd)
             ls -a
             echo "==="
-            /bin/cp -rvf $HOME/blog/public/* public
-            cd public
+            cd blog
+            git rm *
+            /bin/cp -rvf $HOME/blog/public/* .
+
             git config --local user.email "w@tcp.cat"
             git config --local user.name "yuuzao"
             git add .
             git commit -m "new post" -a
-      - name: push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.REPO_TOKEN }}
-          branch: public
+            git push origin blog
             
             
