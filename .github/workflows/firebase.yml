@@ -62,4 +62,4 @@ jobs:
             git remote add origin https://yuuzao:${{secrets.REPO_TOKEN }}@github.com/yuuzao/blog.git
             git add .
             git commit -m "new post" -a
-            git push origin main -f
+            git push origin master -f
