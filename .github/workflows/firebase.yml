@@ -59,11 +59,9 @@ jobs:
             git config --global user.email "w@tcp.cat"
             git config --global user.name "yuuzao"
             git init
+            git remote add origin https://github.com/yuuzao/blog.git
             git add .
             git commit -m "new post" -a
-            git branch -M main
 
-
-            git remote add origin https://github.com/yuuzao/blog.git
             git push origin https://${{ secrets.REPO_TOKEN }}@github.com/yuuzao/blog.git -f
             
