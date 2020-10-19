@@ -64,6 +64,11 @@ jobs:
             git branch
             git add .
             git commit -m "new post" -a
-
-            git push origin https://yuuzao:${{ secrets.REPO_TOKEN }}@github.com/yuuzao/blog.git -f
             
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.REPO_TOKEN }}
+          directory: $HOME/blog/public
+          branch: main
+          repository: "yuuzao/blog"
