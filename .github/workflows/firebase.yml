@@ -62,7 +62,9 @@ jobs:
             cd blog
             rm -r * 
             /bin/cp -rvf $HOME/blog/public/* .
-
+            echo '----'
+            git show-ref
+            echo '---'
             git config --local user.email "w@tcp.cat"
             git config --local user.name "yuuzao"
             git add .
