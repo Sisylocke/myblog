@@ -59,6 +59,7 @@ jobs:
             echo $(pwd)
             echo '----'
             cd public
+            git branch
             git checkout public
             mkdir -p public/public
             rm -rf public/public/*
