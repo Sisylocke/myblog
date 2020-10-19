@@ -57,7 +57,7 @@ jobs:
         run: |
             echo "---"
             echo $(pwd)
-            
+            ls -a
             echo "==="
             /bin/cp -rvf $HOME/blog/public/* /public
             cd public
