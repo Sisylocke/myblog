@@ -55,18 +55,11 @@ jobs:
         
       - name: commit changes
         run: |
-            echo "---"
-            echo $(pwd)
-            echo '----'
-            cd public
-            git branch
+            cd $HOME/blog/public
+            git init
+            git remote add origin https://github.com/yuuzao/myblog.git
             git checkout public
-            mkdir -p public/public
-            rm -rf public/public/*
-            /bin/cp -rvf $HOME/blog/public/* public/public
-            ls -a
-            echo '--'
-            
+            git add .
             ls -a
             git status
 
