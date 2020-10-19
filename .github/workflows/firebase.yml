@@ -59,7 +59,7 @@ jobs:
             echo $(pwd)
             echo '----'
             mkdir -p public
-            rm -rf public
+            rm -rf public/*
             /bin/cp -rvf $HOME/blog/public/* public/
             ls -a
             echo '--'
