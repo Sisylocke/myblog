@@ -63,7 +63,7 @@ jobs:
             git config --global user.email "w@tcp.cat"
             git config --global user.name "yuuzao"
             
-            git remote add origin https://${{ secrets.REPO_TOKEN }}github.com/yuuzao/blog.git
+            git remote add origin https://${{ secrets.REPO_TOKEN }}@github.com/yuuzao/blog.git
             git push -u origin main --force
 
             
