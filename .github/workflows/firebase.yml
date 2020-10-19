@@ -46,7 +46,7 @@ jobs:
       
       - name: ssh setup
         env:
-          Host: ${{ sercrets.HOST }}
+          Host: ${{ secrets.HOST }}
           Secret_key: ${{ secrets.SECRET_KEY }}
         run: |
           mkdir -p ~/.ssh
