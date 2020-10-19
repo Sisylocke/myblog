@@ -64,9 +64,7 @@ jobs:
             /bin/cp -rvf $HOME/blog/public/* public/
             git show-ref
             echo '---'
-            git config --local user.email "w@tcp.cat"
-            git config --local user.name "yuuzao"
-            git add public -f
+            git add . -f
             git commit -m "new post" -a
             git push origin blog --force
             
