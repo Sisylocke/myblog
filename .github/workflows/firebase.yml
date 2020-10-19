@@ -60,7 +60,7 @@ jobs:
             ls -a
             echo "==="
             cd blog
-            git rm *
+            rm -r * 
             /bin/cp -rvf $HOME/blog/public/* .
 
             git config --local user.email "w@tcp.cat"
