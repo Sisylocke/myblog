@@ -1,0 +1,51 @@
+<!doctype html><html><head><meta charset=utf-8><base href=http://tcp.cat><link rel=stylesheet href=http://tcp.cat/style.css><title></title></head><body lang=en , style=width:800px;margin:auto><div id=sidebar><a href=/><img src=http://tcp.cat/logo.jpg alt=logo id=logo></a><ul><li><a href=/><span>Home</span></a></li><li><a href=/about><span>about</span></a></li></ul></div><main class=markdown-body><article><h1></h1><h1 id=httpserver代码阅读>http.server代码阅读</h1><p>python内置一个简单的web server，可以用 <code>python -m http.server</code> 直接调用。直接调用运行的server是单线程的，而且只接受HTTP的GET和HEAD方法，若要使用POST等方法就要自己手动扩展了。源码在此 <a href=https://github.com/python/cpython/blob/master/Lib/http/server.py>https://github.com/python/cpython/blob/master/Lib/http/server.py</a></p><p>代码结构很清晰，用<code>pyrevese</code>生成的类图如下，可以看出整个module大致分为两个部分，server类和处理http请求的handler类。
+<img src=https://raw.githubusercontent.com/yuuzao/mypicserver/master/img/20200620230723.webp alt></p><h1 id=main-function>main function</h1><p>main函数主要负责直接使用<code>python -m</code>的执行。首先使用<code>argparse</code>解析传入的参数。
+module是支持cgi扩展的，如果传入的参数有cgi的需求则使用<code>CGIHTTPRequestHandler</code>来处理，其它则用<code>SimpleHTTPRequestHandler</code>处理。<code>test()</code>函数使用解析后的参数来让server运行起来。
+<img src=https://raw.githubusercontent.com/yuuzao/mypicserver/master/img/20200620230852.webp alt></p><h1 id=http请求处理>HTTP请求处理</h1><p>HTTP请求处理包括三个类，<code>BaseHTTPRequestHandler</code> <code>SimpleHTTPRequestHandler</code> 和 <code>CGIHTTPResquestHandler</code>。</p><ul><li><h2 id=basehttprequesthandler>BaseHTTPRequestHandler</h2><p>这个类实现的是对HTTP请求的基本处理。HTTP(HyperText Transfer Protocol)是一个建立在可靠数据流传输服务（例如TCP/IP）之上的可扩展协议。该协议会识别出HTTP请求的三个部分：</p><ul><li>一行用于验证请求类型和路径的部分</li><li>可选的RFC-822-style headers</li><li>可选的data</li></ul><p>其中headers和数据使用一个空行分隔。
+http请求的第一行格式为
+<code>&lt;command> &lt;path> &lt;version></code>
+其中<code> &lt;command></code>是一个大小写敏感的关键字，例如<code>GET</code>和<code>POST</code>；<code>path</code>是包含路径信息的字符串，使用URL编码规则进行编码。；<code>version</code>表示HTTP协议版本，例如<code>HTTP/1.0</code>或者<code>HTTP/1.1</code>，要注意的是版本号的格式为<code>1.x</code>，后面小数不可省略。
+HTTP规定了使用<code>CRLF</code>进行换行，但为了兼容性的考虑，也需要处理<code>LF</code>换行的情况。http请求中的空格也需要相似的处理（允许相邻部分存在多个空格，也允许末尾存在空格）。
+同样地，对于服务器的输出，应当使用<code>CRLF</code>换行，但是也要保证兼容<code>LF</code>换行。
+如果请求的第一行格式不包括<code>version</code>，则默认为0.9，这种格式的请求没有headers和data部分，服务器的响应也只有data部分。
+对于HTTP/1.x协议，服务器响应也由三部分组成：</p></li><li><p>第一行给出响应的状态码</p></li><li><p>一组可选的RFC-822-style headers</p></li><li><p>data</p></li></ul><p>其中<code>headers</code>和<code>data</code>也用空行分隔。</p><p>http状态码的格式为
+<code>&lt;version> &lt;responsecode> &lt;responsestring></code>
+其中<code>&lt;version></code>仍然表示http版本（<code>HTTP/1.0</code>或者<code>HTTP/1.1</code>）；<code>&lt;responsecode></code>是三个数字组成的HTTP状态码（例如200，500），用于表明请求是否成功；<code>&lt;responsestring></code>为面向用户的可选字符串，用于解释状态码含义。
+python内置的server的主要工作是解析http请求及其headers，然后根据请求类型（GET或POST）调用相关的函数处理该请求。需要指出的是，若请求被识别为SPAM，则调用<code>do_SPAM()</code>方法处理，如果没有该方法，server则返回一个错误响应。</p><p>实例变量中会存储http请求的细节：</p><ul><li><code>client_address</code>为客户端的ip地址，格式为<code>(host, port)</code></li><li><code>command, path, version</code>是处理过后的请求行</li><li><code>headers</code>是<code>email.message.Message</code>类的实例，带有header信息</li><li><code>rfile</code>是一个可读的文件对象，位于可选data部分的开始，来自<code>socketserver</code></li><li><code>wfile</code>是一个可写的文件对象，来之<code>socketserver</code></li></ul><p>根据HTTP协议，响应内容的第一行必须给出响应状态。然后是0行或者多行header。然后是一个空行。再然后才是data。header行的内容由server所执行的命令有关，在大多数情况下，如果有data返回，则header应当至少有一行包括<code>Content-type: &lt;type>/&lt;subtype></code>，<code>type</code>和<code>subtype</code>为<code>MIME</code>类型，例如<code>text/html</code>或者<code>text/plain</code>。</p><ul><li><h2 id=simplehttprequesthandler>SimpleHTTPRequestHandler</h2><p>这个类的主要作用是处理<code>GET</code>请求。如果url代表的路径是一个文件夹的话，则生成一个该目录内容的的HTML格式的文件；若请求的是一个文件，则直接返回这个文件。使用<code>copyfile</code>将前面步骤生成的文件复制到<code>wfile</code>对象。</p></li><li><p><code>CGIHTTPResquestHandler</code>
+这个类处理CGI相关请求，<code>POST</code>的处理在这个类中，但是默认是不启用，需要在shell命令中添加 <code>--cgi</code>参数。</p><p>#性能测试
+在了解了基本原理后我们来测试一下它的性能。
+首先用默认的单线程进行测试，自定义的代码如下：</p><pre><code>from http.server import BaseHTTPRequestHandler
+from http import HTTPStatus
+
+DEFAULT_MESSAGE = &quot;&quot;&quot;\
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html;charset=utf-8&quot;&gt;
+        &lt;title&gt;Hello World&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;p&gt;hello, world&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+&quot;&quot;&quot;
+class TestHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        message = DEFAULT_MESSAGE.encode('utf-8')
+        self.send_response(HTTPStatus.OK)
+        self.send_header(&quot;Content-type&quot;, &quot;text/html; charse='utf-8'&quot;)
+        self.send_header('Content-Length', str(len(message)))
+        self.end_headers()
+  
+        self.wfile.write(message)
+if __name__ == &quot;__main__&quot;:
+    from http.server import HTTPServer
+    server = HTTPServer(('localhost', 8000), TestHandler)
+    print('test starts')
+    server.serve_forever()
+</code></pre></li></ul><p>用wrk进行测试 <code>wrk -t10 -d1m -c200 http://127.0.0.1:8000</code>结果如下：
+<img src=https://raw.githubusercontent.com/yuuzao/mypicserver/master/img/20200620230910.webp alt>
+单线程情况下平均每秒538个请求，嗯。。。还行。</p></article></main><footer><div><p>&copy; 2019 -2020 <a href=https://github.com/yuuzao>一颗鱼藻</a> ●﹏●</p></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq crossorigin=anonymous><script type=module>
+        import renderMathInElement from "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.mjs";
+        renderMathInElement(document.body);
+    </script></footer></body></html>
