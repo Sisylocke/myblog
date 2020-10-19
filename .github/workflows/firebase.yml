@@ -32,7 +32,6 @@ jobs:
         run: |
           hugo new site $HOME/blog
 
-
       - name: copy file to blog dir
         run: |
           cd master
@@ -48,10 +47,16 @@ jobs:
         run: |
           cd $HOME/blog
           HUGO_ENV=production hugo --gc --minify
-          
+           
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          path: public
+        
       - name: commit changes
         run: |
-            cd $HOME/blog/public
+            /bin/cp -rvf $HOME/blog/public/* /public
+            cd public
             git config --local user.email "w@tcp.cat"
             git config --local user.name "yuuzao"
             git add .
