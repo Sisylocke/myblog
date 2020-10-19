@@ -59,6 +59,8 @@ jobs:
             echo $(pwd)
             ls -a
             cd blog
+            git show-ref
+            echo '----'
             find . -name 'public' -delete
             mkdir public
             /bin/cp -rvf $HOME/blog/public/* public/
