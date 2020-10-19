@@ -1,6 +1,9 @@
 name: HugoToFirebase
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build:
@@ -9,7 +12,9 @@ jobs:
 
     steps:  
       - name: Checkout
-        uses:  actions/checkout@v1
+        uses:  actions/checkout@v2
+        with:
+          path: master
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
@@ -52,12 +57,17 @@ jobs:
           known_hosts: ${{ secrets.HOST }}
 
           
-      - name: push to server
+      - name: commit changes
         run: |
-            cd $HOME/blog
-            rsync --delete -rvzh ./public/ ${{ secrets.USER }}@${{ secrets.HOST }}:/var/blog/
-#           sudo curl -o "/usr/local/bin/firebase" -L https://firebase.tools/bin/linux/latest
-#           sudo chmod +rx "/usr/local/bin/firebase"
-#           cd $HOME/blog
-#           firebase use khaki-161613 --token ${{ secrets.FIREBASE_TOKEN }}
-#           firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
+            cd $HOME/blog/public
+            git config --local user.email "w@tcp.cat"
+            git config --local user.name "yuuzao"
+            git add .
+            git commit -m "new post" -a
+      - name: push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.REPO_TOKEN }}
+          branch: public
+            
+            
