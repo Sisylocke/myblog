@@ -65,5 +65,5 @@ jobs:
             git add .
             git commit -m "new post" -a
 
-            git push origin https://${{ secrets.REPO_TOKEN }}@github.com/yuuzao/blog.git -f
+            git push origin https://yuuzao:${{ secrets.REPO_TOKEN }}@github.com/yuuzao/blog.git -f
             
