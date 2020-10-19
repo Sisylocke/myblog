@@ -65,7 +65,8 @@ jobs:
             echo '--'
             cd public
             ls -a
-            git show-ref
+            git status
+            git checkout public
             echo '---'
             git config --local user.email "w@tcp.cat"
             git config --local user.name "yuuzao"
