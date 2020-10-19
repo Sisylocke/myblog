@@ -62,7 +62,6 @@ jobs:
             find . -name 'public' -delete
             mkdir public
             /bin/cp -rvf $HOME/blog/public/* public/
-            echo '----'
             git show-ref
             echo '---'
             git config --local user.email "w@tcp.cat"
