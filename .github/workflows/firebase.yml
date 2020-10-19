@@ -67,6 +67,6 @@ jobs:
             git config --local user.name "yuuzao"
             git add .
             git commit -m "new post" -a
-            git push origin blog
+            git push origin blog --force
             
             
