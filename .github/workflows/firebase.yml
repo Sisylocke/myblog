@@ -35,10 +35,10 @@ jobs:
 
       - name: copy file to blog dir
         run: |
+          cd master
           rm -rf $HOME/blog/content/
           /bin/cp -rvf config.toml $HOME/blog/config.toml
           /bin/cp -rvf content/ $HOME/blog/content/
-          /bin/cp -rvf firebase.json $HOME/blog/
         
       - name: install theme
         run: |
@@ -48,14 +48,6 @@ jobs:
         run: |
           cd $HOME/blog
           HUGO_ENV=production hugo --gc --minify
-      
-      - name: Install SSH key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SECRET_KEY }}
-          name: id_rsa
-          known_hosts: ${{ secrets.HOST }}
-
           
       - name: commit changes
         run: |
