@@ -55,6 +55,9 @@ jobs:
         
       - name: commit changes
         run: |
+            echo "---"
+            echo $(pwd)
+            echo "==="
             /bin/cp -rvf $HOME/blog/public/* /public
             cd public
             git config --local user.email "w@tcp.cat"
