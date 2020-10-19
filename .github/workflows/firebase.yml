@@ -60,7 +60,8 @@ jobs:
             ls -a
             echo "==="
             cd blog
-            rm -r public
+            find . -name 'public' -delete
+            mkdir public
             /bin/cp -rvf $HOME/blog/public/* public/
             echo '----'
             git show-ref
