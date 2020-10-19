@@ -51,7 +51,7 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           echo "${Host}" >> ~/.ssh/known_hosts
-          echo "${Secret_key} >> ~/.ssh/my_rsync_key
+          echo "${Secret_key}" >> ~/.ssh/my_rsync_key
           echo "IdentityFile ~/.ssh/my_rsync_key" >> ~/.ssh/config
           chmod -R 700 ~/.ssh
           
