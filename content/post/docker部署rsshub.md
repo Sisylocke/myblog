@@ -61,7 +61,7 @@ docker inspect --format='{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAdd
 ```
 server {
     ......
-    location /rsshub {
+    location /rsshub/ {
                 # 注意端口后面要加斜线
                 proxy_pass http://172.19.0.4:1200/;
                 proxy_redirect off;
