@@ -32,7 +32,7 @@ services:
 - 然后是持久化redis
 
 ```
-docker volume redis-data
+docker volume create redis-data
 ```
 - 接着就可以run起来
 ```
